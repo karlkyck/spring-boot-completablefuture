@@ -1,0 +1,23 @@
+plugins {
+    id 'org.springframework.boot' version '1.5.3.RELEASE'
+    id 'java'
+}
+
+
+jar {
+    baseName = 'spring-boot-completablefuture'
+    version = '1.0.0-SNAPSHOT'
+}
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile 'org.javassist:javassist:3.18.2-GA'
+    compile 'com.github.mongobee:mongobee:0.12'
+    compile 'org.springframework.boot:spring-boot-starter-web'
+    compile 'org.springframework.boot:spring-boot-starter-data-mongodb'
+    testCompile 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
+    testCompile 'org.springframework.boot:spring-boot-starter-test'
+}

@@ -1,0 +1,14 @@
+spring:
+    application:
+        name: spring-boot-completablefuture
+
+    data:
+        mongodb:
+            uri: mongodb://localhost:27017
+            database: SpringBootCompletableFuture
+
+application:
+    async:
+        core-pool-size: 20
+        max-pool-size: 500
+        queue-capacity: 10000
