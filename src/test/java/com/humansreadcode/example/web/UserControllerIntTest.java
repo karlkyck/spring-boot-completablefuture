@@ -2,7 +2,6 @@ package com.humansreadcode.example.web;
 
 import com.humansreadcode.example.Application;
 import org.hamcrest.Matchers;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,6 +16,9 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
@@ -41,21 +43,6 @@ public class UserControllerIntTest {
                 .standaloneSetup(userController)
                 .setCustomArgumentResolvers(pageableArgumentResolver)
                 .build();
-    }
-
-    @Test
-    public void testGetUsersInParallel() throws Exception {
-
-        IntStream
-                .range(1, 100)
-                .parallel()
-                .forEach(i -> {
-                    try {
-                        testGetUsersPage0Size1();
-                    } catch (final Exception e) {
-                        Assert.fail(e.getMessage());
-                    }
-                });
     }
 
     @Test
