@@ -2,6 +2,7 @@ package com.humansreadcode.example.web;
 
 import com.humansreadcode.example.Application;
 import org.hamcrest.Matchers;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,6 +16,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import java.util.stream.IntStream;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -38,6 +41,21 @@ public class UserControllerIntTest {
                 .standaloneSetup(userController)
                 .setCustomArgumentResolvers(pageableArgumentResolver)
                 .build();
+    }
+
+    @Test
+    public void testGetUsersInParallel() throws Exception {
+
+        IntStream
+                .range(1, 100)
+                .parallel()
+                .forEach(i -> {
+                    try {
+                        testGetUsersPage0Size1();
+                    } catch (final Exception e) {
+                        Assert.fail(e.getMessage());
+                    }
+                });
     }
 
     @Test
@@ -69,7 +87,6 @@ public class UserControllerIntTest {
 
     @Test
     public void testGetUsersPage0Size1() throws Exception {
-
         final MockHttpServletRequestBuilder getRequest = get(UserController.REQUEST_PATH_API_USERS)
                 .param("size", "1")
                 .accept(MediaType.APPLICATION_JSON);
@@ -123,7 +140,8 @@ public class UserControllerIntTest {
     @Test
     public void testGetUser() throws Exception {
 
-        final MockHttpServletRequestBuilder getRequest = get(UserController.REQUEST_PATH_API_USERS + "/590f86d92449343841cc2c3f")
+        final MockHttpServletRequestBuilder getRequest = get(UserController.REQUEST_PATH_API_USERS +
+                                                                     "/590f86d92449343841cc2c3f")
                 .accept(MediaType.APPLICATION_JSON);
 
         final MvcResult mvcResult = mockMvc

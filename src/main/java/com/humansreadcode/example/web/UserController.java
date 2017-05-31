@@ -1,5 +1,6 @@
 package com.humansreadcode.example.web;
 
+import com.humansreadcode.example.config.AsyncConfiguration;
 import com.humansreadcode.example.domain.User;
 import com.humansreadcode.example.service.UserService;
 import org.slf4j.Logger;
@@ -20,7 +21,7 @@ import java.util.function.Function;
 
 @RestController
 @RequestMapping(value = UserController.REQUEST_PATH_API_USERS)
-public class UserController {
+class UserController {
 
     static final String REQUEST_PATH_API_USERS = "/api/users";
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
@@ -32,7 +33,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @Async
+    @Async(AsyncConfiguration.TASK_EXECUTOR_CONTROLLER)
     @GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public CompletableFuture<ResponseEntity> getUsers(final Pageable paging) {
         return userService
@@ -41,7 +42,7 @@ public class UserController {
                 .exceptionally(handleGetUsersFailure);
     }
 
-    @Async
+    @Async(AsyncConfiguration.TASK_EXECUTOR_CONTROLLER)
     @GetMapping(value = REQUEST_PATH_API_USERS_INDIVIDUAL_USER,
                 produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public CompletableFuture<ResponseEntity> getUser(@PathVariable final String userId) {

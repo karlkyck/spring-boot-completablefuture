@@ -9,6 +9,6 @@ spring:
 
 application:
     async:
-        core-pool-size: 20
-        max-pool-size: 500
+        core-pool-size: 10
+        max-pool-size: 50
         queue-capacity: 10000

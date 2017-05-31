@@ -15,7 +15,14 @@ import java.util.concurrent.Executor;
 public class AsyncConfiguration implements AsyncConfigurer {
 
     private static final String TASK_EXECUTOR_DEFAULT = "taskExecutor";
-    private static final String TASK_EXECUTOR_NAME_PREFIX = "taskExecutor-";
+    private static final String TASK_EXECUTOR_NAME_PREFIX_DEFAULT = "taskExecutor-";
+    private static final String TASK_EXECUTOR_NAME_PREFIX_REPOSITORY = "serviceTaskExecutor-";
+    private static final String TASK_EXECUTOR_NAME_PREFIX_CONTROLLER = "controllerTaskExecutor-";
+    private static final String TASK_EXECUTOR_NAME_PREFIX_SERVICE = "serviceTaskExecutor-";
+
+    public static final String TASK_EXECUTOR_REPOSITORY = "repositoryTaskExecutor";
+    public static final String TASK_EXECUTOR_SERVICE = "serviceTaskExecutor";
+    public static final String TASK_EXECUTOR_CONTROLLER = "controllerTaskExecutor";
 
     private final ApplicationProperties applicationProperties;
 
@@ -26,17 +33,36 @@ public class AsyncConfiguration implements AsyncConfigurer {
     @Override
     @Bean(name = TASK_EXECUTOR_DEFAULT)
     public Executor getAsyncExecutor() {
-        final ApplicationProperties.Async asyncProperties = applicationProperties.getAsync();
-        final ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(asyncProperties.getCorePoolSize());
-        executor.setMaxPoolSize(asyncProperties.getMaxPoolSize());
-        executor.setQueueCapacity(asyncProperties.getQueueCapacity());
-        executor.setThreadNamePrefix(TASK_EXECUTOR_NAME_PREFIX);
-        return executor;
+        return newTaskExecutor(TASK_EXECUTOR_NAME_PREFIX_DEFAULT);
+    }
+
+    @Bean(name = TASK_EXECUTOR_REPOSITORY)
+    public Executor getRepositoryAsyncExecutor() {
+        return newTaskExecutor(TASK_EXECUTOR_NAME_PREFIX_REPOSITORY);
+    }
+
+    @Bean(name = TASK_EXECUTOR_SERVICE)
+    public Executor getServiceAsyncExecutor() {
+        return newTaskExecutor(TASK_EXECUTOR_NAME_PREFIX_SERVICE);
+    }
+
+    @Bean(name = TASK_EXECUTOR_CONTROLLER)
+    public Executor getControllerAsyncExecutor() {
+        return newTaskExecutor(TASK_EXECUTOR_NAME_PREFIX_CONTROLLER);
     }
 
     @Override
     public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
         return new SimpleAsyncUncaughtExceptionHandler();
+    }
+
+    private Executor newTaskExecutor(final String taskExecutorNamePrefix) {
+        final ApplicationProperties.Async asyncProperties = applicationProperties.getAsync();
+        final ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(asyncProperties.getCorePoolSize());
+        executor.setMaxPoolSize(asyncProperties.getMaxPoolSize());
+        executor.setQueueCapacity(asyncProperties.getQueueCapacity());
+        executor.setThreadNamePrefix(taskExecutorNamePrefix);
+        return executor;
     }
 }
