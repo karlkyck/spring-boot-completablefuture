@@ -22,12 +22,12 @@ public class UserServiceImpl implements UserService {
     @Override
     @Async(AsyncConfiguration.TASK_EXECUTOR_SERVICE)
     public CompletableFuture<Page<User>> findAll(final Pageable pageable) {
-        return userRepository.readAllBy(pageable);
+        return userRepository.findAllBy(pageable);
     }
 
     @Override
     @Async(AsyncConfiguration.TASK_EXECUTOR_SERVICE)
     public CompletableFuture<User> findOneById(final String id) {
-        return userRepository.readOneById(id);
+        return userRepository.findOneById(id);
     }
 }

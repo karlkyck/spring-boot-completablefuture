@@ -12,8 +12,8 @@ import java.util.concurrent.CompletableFuture;
 public interface UserRepository extends MongoRepository<User, String> {
 
     @Async(AsyncConfiguration.TASK_EXECUTOR_REPOSITORY)
-    CompletableFuture<Page<User>> readAllBy(final Pageable pageable);
+    CompletableFuture<Page<User>> findAllBy(final Pageable pageable);
 
     @Async(AsyncConfiguration.TASK_EXECUTOR_REPOSITORY)
-    CompletableFuture<User> readOneById(final String id);
+    CompletableFuture<User> findOneById(final String id);
 }
