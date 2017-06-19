@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 @Service
@@ -27,7 +28,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Async(AsyncConfiguration.TASK_EXECUTOR_SERVICE)
-    public CompletableFuture<User> findOneById(final String id) {
-        return userRepository.findOneById(id);
+    public CompletableFuture<Optional<User>> findOneById(final String id) {
+        return userRepository
+                .findOneById(id)
+                .thenApply(Optional::ofNullable);
     }
 }

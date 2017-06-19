@@ -48,7 +48,6 @@ class UserController {
     public CompletableFuture<ResponseEntity> getUser(@PathVariable final String userId) {
         return userService
                 .findOneById(userId)
-                .thenApply(Optional::ofNullable)
                 .thenApply(mapMaybeUserToResponse)
                 .exceptionally(handleGetUserFailure.apply(userId));
     }
